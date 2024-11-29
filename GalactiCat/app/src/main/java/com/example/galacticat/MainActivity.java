@@ -2,10 +2,13 @@ package com.example.galacticat;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AppComponentFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
@@ -14,7 +17,7 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
 // lol.kt on mainactivityn kotlin versio, ei tee mitää mutten uskaltanu poistaa sitä XD
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private Mqtt5AsyncClient client;
 
