@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="ExtraText">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:pointerIcon="help"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme" />
 
     <TextView
         android:id="@+id/tv_message"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="@string/received_messages_will_appear_here"
+        android:layout_height="65dp"
+        android:text="@string/Temperaturevalues"
         android:textSize="20sp" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="354dp"
+        android:contentDescription="@string/catimage"
+        android:src="@drawable/astronautit" />
+
+    <TextView
+        android:id="@+id/connection_info"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="20sp" />
     <Button
         android:id="@+id/btn_Connect"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/purple_200"
+        android:textSize="20sp"
         android:layout_gravity="end"
         android:scaleX="1"
         android:text="@string/connect" />

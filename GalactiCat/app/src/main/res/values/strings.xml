@@ -2,4 +2,7 @@
     <string name="app_name">GalactiCat</string>
     <string name="connect">Connect</string>
     <string name="received_messages_will_appear_here">Received messages will appear here</string>
+    <string name="catimage">CatImage</string>
+    <string name="Temperaturevalues" />
+    <string name="subscribed_values">Subscribed values</string>
 </resources>

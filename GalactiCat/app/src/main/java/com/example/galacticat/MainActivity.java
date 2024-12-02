@@ -3,8 +3,10 @@ package com.example.galacticat;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AppComponentFactory;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -28,6 +30,20 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
+    //navigointi sivujen välillä, ei oo vielä nappuloita millä navigoida niin ei toimi
+    /*private void navigation () {
+        Button b1 = findViewById(R.id.page1);
+        b1.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(MainActivity.this,value_screen.class);
+                        startActivity(i);
+                    }
+                }
+        );
+    }*/
+
     private void init () {
         Button btn = findViewById(R.id.btn_Connect);
 
@@ -45,13 +61,20 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(v -> Connect());
     }
 
+    //varmaa pitäis laittaa nii et samasta nappulasta voi disconnectaa
+
     //Yhistää mqtt, logissa viesti onnistuuko
+    @SuppressLint("SetTextI18n")
     private void Connect () {
 
         client.connect().whenComplete((ack, throwable) -> {
             if (throwable != null) {
+                TextView messageTextView = findViewById(R.id.connection_info);
+                messageTextView.setText("Connection failed");
                 Log.e("MQTT", "Connection failed", throwable);
             } else {
+                TextView messageTextView = findViewById(R.id.connection_info);
+                messageTextView.setText("Connected successfully");
                 Log.d("MQTT", "Connected successfully");
                 Subscribe();
             }
