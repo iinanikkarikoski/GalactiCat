@@ -1,19 +1,18 @@
 package com.example.galacticat;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AppComponentFactory;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 //README: xml tiedosto res>layout>activity_main.xml
 // lol.kt on mainactivityn kotlin versio, ei tee mitää mutten uskaltanu poistaa sitä XD
@@ -91,13 +90,44 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("MQTT", "Received message: " + new String(publish.getPayloadAsBytes()));
 
                     String receivedMessage = new String(publish.getPayloadAsBytes());
+                    float temperature = Float.parseFloat(receivedMessage);
 
                     //kirjottaa näytölle
                     runOnUiThread(() -> {
                         TextView messageTextView = findViewById(R.id.tv_message);
-                        messageTextView.setText("Received message: " + receivedMessage);
+                        messageTextView.setText("Current temperature: " + receivedMessage);
+
+                        CheckTemp(temperature);
                     });
                 })
                 .send();
+    }
+
+    private void CheckTemp (float temp) {
+
+        if (temp > 35) {
+            ImageView image = findViewById(R.id.catimage);
+            image.setImageResource(R.drawable.cat_burning);
+        }
+
+        else if (temp > 30) {
+            ImageView image = findViewById(R.id.catimage);
+            image.setImageResource(R.drawable.cat_hot);
+        }
+
+        else if (temp > 27) {
+            ImageView image = findViewById(R.id.catimage);
+            image.setImageResource(R.drawable.cat_normal);
+        }
+
+        else if (temp > 25) {
+            ImageView image = findViewById(R.id.catimage);
+            image.setImageResource(R.drawable.cat_cold);
+        }
+
+        else if (temp > 24) {
+            ImageView image = findViewById(R.id.catimage);
+            image.setImageResource(R.drawable.cat_freezing);
+        }
     }
 }

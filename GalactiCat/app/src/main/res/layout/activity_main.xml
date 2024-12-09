@@ -4,33 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/black"
     tools:ignore="ExtraText">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:pointerIcon="help"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
 
     <TextView
         android:id="@+id/tv_message"
         android:layout_width="match_parent"
         android:layout_height="65dp"
+        android:textColor="@color/white"
         android:text="@string/Temperaturevalues"
         android:textSize="20sp" />
 
     <ImageView
+        android:id="@+id/catimage"
         android:layout_width="match_parent"
         android:layout_height="354dp"
         android:contentDescription="@string/catimage"
-        android:src="@drawable/astronautit" />
+        android:src="@drawable/cat_normal" />
 
     <TextView
         android:id="@+id/connection_info"
         android:layout_width="match_parent"
+        android:textColor="@color/white"
         android:layout_height="50dp"
         android:textSize="20sp" />
     <Button
