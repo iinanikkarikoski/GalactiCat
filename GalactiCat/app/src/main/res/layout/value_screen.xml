@@ -2,11 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/black">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="357dp"
-        android:text="@string/subscribed_values" />
+        android:layout_height="50dp"
+        android:textColor="@color/white"
+        android:text="@string/Sensor_values" />
+
+    <ListView
+        android:id="@+id/sensorValues"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/subscribed_values"/>
+
 </LinearLayout>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,20 +8,37 @@
     android:background="@color/black"
     tools:ignore="ExtraText">
 
+    <ImageButton
+        android:id="@+id/moreValues"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="300dp"
+        android:backgroundTint="#00FFFFFF"
+        android:contentDescription="@string/morevalues"
+        app:srcCompat="@android:drawable/ic_menu_info_details"
+        app:tint="@color/purple_200" />
+
     <TextView
         android:id="@+id/tv_message"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:textColor="@color/white"
+        android:layout_height="50dp"
         android:text="@string/Temperaturevalues"
+        android:textColor="@color/white"
         android:textSize="20sp" />
 
     <ImageView
         android:id="@+id/catimage"
         android:layout_width="match_parent"
-        android:layout_height="354dp"
+        android:layout_height="360dp"
         android:contentDescription="@string/catimage"
         android:src="@drawable/cat_normal" />
+
+    <TextView
+        android:id="@+id/cat_info"
+        android:layout_width="match_parent"
+        android:textColor="@color/white"
+        android:layout_height="50dp"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/connection_info"
@@ -28,15 +46,16 @@
         android:textColor="@color/white"
         android:layout_height="50dp"
         android:textSize="20sp" />
+
     <Button
         android:id="@+id/btn_Connect"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/purple_200"
-        android:textSize="20sp"
         android:layout_gravity="end"
+        android:backgroundTint="@color/purple_200"
         android:scaleX="1"
-        android:text="@string/connect" />
+        android:text="@string/connect"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
 </LinearLayout>

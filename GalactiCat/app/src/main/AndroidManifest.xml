@@ -16,8 +16,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GalactiCat">
+        <activity android:name=".ValueScreen" />
+        <activity android:name=".MainActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".StartScreen"
             android:exported="true"
             android:theme="@style/Theme.GalactiCat">
             <intent-filter>
