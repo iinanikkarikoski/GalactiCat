@@ -7,9 +7,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,25 +19,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
 
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.ArrayList;
+
 
 //README: xml tiedosto res>layout>activity_main.xml
 // lol.kt on mainactivityn kotlin versio, ei tee mitää mutten uskaltanu poistaa sitä XD
 
-
 public class MainActivity extends AppCompatActivity {
 
     private Mqtt5AsyncClient client;
+    private float temperature;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         init();
         navigation();
     }
 
-    //navigointi sivujen välillä, ei oo vielä nappuloita millä navigoida niin ei toimi
+    //Navigation to the value screen
     private void navigation () {
         ImageButton b1 = findViewById(R.id.moreValues);
         b1.setOnClickListener(
@@ -52,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private void init () {
         Button btn = findViewById(R.id.btn_Connect);
 
-        //setuppaa sen hivemq clientin
+        //Setting up the client
         client = MqttClient.builder()
                 .useMqttVersion5()
                 .serverHost("50257ce6934e4209a8fa688ee54347e8.s1.eu.hivemq.cloud")
@@ -66,44 +70,36 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(v -> Connect());
     }
 
-    //varmaa pitäis laittaa nii et samasta nappulasta voi disconnectaa
-
-    //Yhistää mqtt, logissa viesti onnistuuko
+    //Connects to the MQTT
     @SuppressLint("SetTextI18n")
     private void Connect () {
 
         client.connect().whenComplete((ack, throwable) -> {
+            TextView messageTextView = findViewById(R.id.connection_info);
+
             if (throwable != null) {
-                TextView messageTextView = findViewById(R.id.connection_info);
                 messageTextView.setText("Connection failed");
                 Log.e("MQTT", "Connection failed", throwable);
 
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Clear the text after the delay
-                        messageTextView.setText("");
-                    }
-                }, 5000); // Delay in milliseconds
-
             } else {
-                TextView messageTextView = findViewById(R.id.connection_info);
                 messageTextView.setText("Connected successfully");
                 Log.d("MQTT", "Connected successfully");
-                Subscribe();
 
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Clear the text after the delay
-                        messageTextView.setText("");
-                    }
-                }, 5000); // Delay in milliseconds
+                //If successfully connected, goes to subscribe the topic
+                Subscribe();
             }
+
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //Clearing the text after 5 seconds
+                    messageTextView.setText("");
+                }
+            }, 3000);
         });
     }
 
-    //Subscribee lämpötila topicin
+    //Subscribing the temperature values from MQTT
     @SuppressLint("SetTextI18n")
     private void Subscribe () {
 
@@ -113,19 +109,24 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("MQTT", "Received message: " + new String(publish.getPayloadAsBytes()));
 
                     String receivedMessage = new String(publish.getPayloadAsBytes());
-                    float temperature = Float.parseFloat(receivedMessage);
+                    temperature = Float.parseFloat(receivedMessage);
 
-                    //kirjottaa näytölle
+                    //Writing the temp to the app
                     runOnUiThread(() -> {
                         TextView messageTextView = findViewById(R.id.tv_message);
                         messageTextView.setText("Current temperature: " + receivedMessage);
 
+                        //Set temperature to the data class
+                        Data.getInstance().setTemperature(temperature);
+
+                        //Goes to check the temperature
                         CheckTemp(temperature);
                     });
                 })
                 .send();
     }
 
+    //Changing the cat image according to the current temperature
     @SuppressLint("SetTextI18n")
     private void CheckTemp (float temp) {
 
