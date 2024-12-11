@@ -8,29 +8,19 @@
     android:background="@color/black"
     tools:ignore="ExtraText">
 
-    <ImageButton
-        android:id="@+id/moreValues"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="300dp"
-        android:backgroundTint="#00FFFFFF"
-        android:contentDescription="@string/morevalues"
-        app:srcCompat="@android:drawable/ic_menu_info_details"
-        app:tint="@color/purple_200" />
-
     <TextView
         android:id="@+id/tv_message"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="@string/Temperaturevalues"
+        android:layout_height="70dp"
         android:gravity="center"
+        android:text="@string/Temperaturevalues"
         android:textColor="@color/white"
         android:textSize="20sp" />
 
     <ImageView
         android:id="@+id/catimage"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="400dp"
         android:contentDescription="@string/catimage"
         android:src="@drawable/cat_normal" />
 
@@ -46,8 +36,9 @@
         android:id="@+id/connection_info"
         android:layout_width="match_parent"
         android:textColor="@color/white"
-        android:layout_height="50dp"
-        android:textSize="20sp" />
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:textSize="15sp" />
 
     <Button
         android:id="@+id/btn_Connect"

@@ -8,4 +8,9 @@
     <string name="Sensor_values">Sensor values </string>
     <string name="morevalues">moreValues</string>
     <string name="start">START</string>
+    <string name="start_image" />
+    <string name="GalactiCat">GalactiCat</string>
+    <string name="GameOver">GAME OVER!</string>
+    <string name="dead">The cat died :(\nIt was either too cold or too hot</string>
+    <string name="time" />
 </resources>

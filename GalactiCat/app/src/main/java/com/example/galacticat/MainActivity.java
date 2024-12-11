@@ -3,6 +3,7 @@ package com.example.galacticat;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -19,7 +20,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 //README: xml tiedosto res>layout>activity_main.xml
@@ -29,28 +34,68 @@ public class MainActivity extends AppCompatActivity {
 
     private Mqtt5AsyncClient client;
     private float temperature;
+    private int counter_cold;
+    private int counter_hot;
+
+    private final Handler timerHandler = new Handler();
+    private Runnable timerRunnable;
+    private long startTime;
+    private boolean isTimerRunning = false;
+    public long time;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Objects.requireNonNull(getSupportActionBar()).hide();
+
         init();
-        navigation();
+        createFile();
     }
 
-    //Navigation to the value screen
-    private void navigation () {
-        ImageButton b1 = findViewById(R.id.moreValues);
-        b1.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(MainActivity.this,ValueScreen.class);
-                        startActivity(i);
-                    }
+    private void startTimer() {
+        startTime = System.currentTimeMillis();
+        isTimerRunning = true;
+
+        timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (isTimerRunning) {
+                    long elapsedTime = System.currentTimeMillis() - startTime;
+                    Log.d("TIMER", "Elapsed Time: " + elapsedTime / 1000 + " seconds");
+
+                    // If you need to do something periodically, you can add the logic here
+
+                    // Repeat every second
+                    timerHandler.postDelayed(this, 1000);
                 }
-        );
+            }
+        };
+
+        // Start the timer immediately
+        timerHandler.post(timerRunnable);
+    }
+
+    private void createFile() {
+        try {
+            File directory = getFilesDir();
+            File file = new File(directory, "DataValues.txt");
+
+            if (file.createNewFile()) {
+                Log.d("WRITING", "File created: " + file.getAbsolutePath());
+            } else {
+                Log.d("WRITING", "File already exists:" + file.getAbsolutePath());
+            }
+        } catch (IOException e) {
+            Log.d("WRITING", "An error occurred.");
+        }
+    }
+
+    private void navigation () {
+        Intent i = new Intent(MainActivity.this, GameOver.class);
+        i.putExtra("elapsed_time", time);
+        startActivity(i);
     }
 
     private void init () {
@@ -85,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 messageTextView.setText("Connected successfully");
                 Log.d("MQTT", "Connected successfully");
 
+                startTimer();
                 //If successfully connected, goes to subscribe the topic
                 Subscribe();
             }
@@ -92,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    //Clearing the text after 5 seconds
+                    //Clearing the text
                     messageTextView.setText("");
                 }
             }, 3000);
@@ -116,8 +162,17 @@ public class MainActivity extends AppCompatActivity {
                         TextView messageTextView = findViewById(R.id.tv_message);
                         messageTextView.setText("Current temperature: " + receivedMessage);
 
-                        //Set temperature to the data class
-                        Data.getInstance().setTemperature(temperature);
+                        try {
+                            File directory = getFilesDir();
+                            File file = new File(directory, "DataValues.txt");
+
+                            FileWriter myWriter = new FileWriter(file, true);
+                            myWriter.write("Temperature: " + temperature + "\n");
+                            myWriter.close();
+                            Log.d("WRITING", "Successfully wrote to the file.");
+                        } catch (IOException e) {
+                            Log.d("WRITING", "An error occurred.");
+                        }
 
                         //Goes to check the temperature
                         CheckTemp(temperature);
@@ -136,6 +191,12 @@ public class MainActivity extends AppCompatActivity {
 
             TextView text = findViewById(R.id.cat_info);
             text.setText("Oh no! The cat is burning hot!");
+            counter_hot++;
+
+            //If the temperature is too hot for too long, game over
+            if (counter_hot == 3) {
+                Disconnect();
+            }
         }
 
         else if (temp > 30) {  //hot
@@ -162,12 +223,44 @@ public class MainActivity extends AppCompatActivity {
             text.setText("Be careful! The cat is feeling cold!");
         }
 
-        else if (temp > 25) {  //dead
+        else if (temp > 20 && temp < 26) {  //dead;
             ImageView image = findViewById(R.id.catimage);
             image.setImageResource(R.drawable.cat_freezing);
 
             TextView text = findViewById(R.id.cat_info);
             text.setText("Oh no! The cat is freezing!");
+            counter_cold++;
+
+            //If the temperature is too cold for too long, game over
+            if (counter_cold == 3) {
+                Disconnect();
+            }
         }
+    }
+
+    private void Disconnect() {
+        if (client != null) {
+            client.disconnect()
+                    .whenComplete((ack, throwable) -> {
+                        if (throwable != null) {
+                            Log.e("MQTT", "Error during disconnection", throwable);
+                        } else {
+                            Log.d("MQTT", "Disconnected successfully");
+                            stopTimer();
+                        }
+                    });
+        } else {
+            Log.d("MQTT", "Client is not connected or client is null.");
+        }
+    }
+
+    private void stopTimer() {
+        isTimerRunning = false;
+        timerHandler.removeCallbacks(timerRunnable);  // Stop the timer
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        time = elapsedTime / 1000;
+        Log.d("TIMER", "Total Elapsed Time: " + elapsedTime / 1000 + " seconds");
+
+        navigation();
     }
 }
