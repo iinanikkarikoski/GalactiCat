@@ -65,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
                     long elapsedTime = System.currentTimeMillis() - startTime;
                     Log.d("TIMER", "Elapsed Time: " + elapsedTime / 1000 + " seconds");
 
-                    // If you need to do something periodically, you can add the logic here
-
                     // Repeat every second
                     timerHandler.postDelayed(this, 1000);
                 }
@@ -96,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(MainActivity.this, GameOver.class);
         i.putExtra("elapsed_time", time);
         startActivity(i);
+
+        counter_hot = 0;
+        counter_cold = 0;
     }
 
     private void init () {
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                     //Writing the temp to the app
                     runOnUiThread(() -> {
                         TextView messageTextView = findViewById(R.id.tv_message);
-                        messageTextView.setText("Current temperature: " + receivedMessage);
+                        messageTextView.setText("Current temperature: " + receivedMessage + " °C");
 
                         try {
                             File directory = getFilesDir();
@@ -185,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void CheckTemp (float temp) {
 
-        if (temp > 33) {  //dead
+        if (temp > 32) {  //dead
             ImageView image = findViewById(R.id.catimage);
             image.setImageResource(R.drawable.cat_burning);
 
