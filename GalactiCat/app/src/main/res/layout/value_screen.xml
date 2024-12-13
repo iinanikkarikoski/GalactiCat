@@ -6,14 +6,12 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <TextView
-        android:id="@+id/GameOver"
+    <ImageView
+        android:id="@+id/catimage"
         android:layout_width="match_parent"
-        android:layout_height="386dp"
-        android:gravity="center"
-        android:text="@string/GameOver"
-        android:textColor="@color/white"
-        android:textSize="25sp" />
+        android:layout_height="500dp"
+        android:contentDescription="@string/catimage"
+        android:src="@drawable/game_over" />
 
     <TextView
         android:id="@+id/textView"
