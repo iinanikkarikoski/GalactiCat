@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.time.Instant;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -172,11 +174,14 @@ public class MainActivity extends AppCompatActivity {
                         messageTextView.setText("Current temperature: " + receivedMessage + " °C");
 
                         try {
+                            @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String timestamp = formatter.format(new Date());
+
                             File directory = getFilesDir();
                             File file = new File(directory, "DataValues.txt");
 
                             FileWriter myWriter = new FileWriter(file, true);
-                            myWriter.write("Temperature: " + temperature + "\n");
+                            myWriter.write("Date: " + timestamp + " | Temperature: " + temperature + "\n");
                             myWriter.close();
                             Log.d("WRITING", "Successfully wrote to the file.");
                         } catch (IOException e) {
@@ -194,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void CheckTemp (float temp) {
 
-        if (temp > 32) {  //dead
+        if (temp > 29) {  //dead
             ImageView image = findViewById(R.id.catimage);
             image.setImageResource(R.drawable.cat_burning);
 
@@ -208,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        else if (temp > 30) {  //hot
+        else if (temp > 27) {  //hot
             ImageView image = findViewById(R.id.catimage);
             image.setImageResource(R.drawable.cat_hot);
 
@@ -216,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             text.setText("Be careful! The cat is feeling hot!");
         }
 
-        else if (temp > 28) {  //normal
+        else if (temp > 25) {  //normal
             ImageView image = findViewById(R.id.catimage);
             image.setImageResource(R.drawable.cat_normal);
 
@@ -224,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
             text.setText("Great! The cat is happy!");
         }
 
-        else if (temp > 24) { //cold
+        else if (temp > 23) { //cold
             ImageView image = findViewById(R.id.catimage);
             image.setImageResource(R.drawable.cat_cold);
 
@@ -232,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
             text.setText("Be careful! The cat is feeling cold!");
         }
 
-        else if (temp > 20 && temp < 24) {  //dead;
+        else if (temp > 20 && temp < 23) {  //dead;
             ImageView image = findViewById(R.id.catimage);
             image.setImageResource(R.drawable.cat_freezing);
 
