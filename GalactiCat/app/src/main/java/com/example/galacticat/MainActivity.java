@@ -3,7 +3,6 @@ package com.example.galacticat;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -14,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import java.time.Instant;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -79,12 +79,20 @@ public class MainActivity extends AppCompatActivity {
         try {
             File directory = getFilesDir();
             File file = new File(directory, "DataValues.txt");
+            File time = new File(directory, "timeValues_normal.txt");
 
             if (file.createNewFile()) {
                 Log.d("WRITING", "File created: " + file.getAbsolutePath());
             } else {
                 Log.d("WRITING", "File already exists:" + file.getAbsolutePath());
             }
+
+            if (time.createNewFile()) {
+                Log.d("WRITING", "File created: " + file.getAbsolutePath());
+            } else {
+                Log.d("WRITING", "File already exists:" + file.getAbsolutePath());
+            }
+
         } catch (IOException e) {
             Log.d("WRITING", "An error occurred.");
         }
@@ -216,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
             text.setText("Great! The cat is happy!");
         }
 
-        else if (temp > 26) { //cold
+        else if (temp > 24) { //cold
             ImageView image = findViewById(R.id.catimage);
             image.setImageResource(R.drawable.cat_cold);
 
@@ -224,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
             text.setText("Be careful! The cat is feeling cold!");
         }
 
-        else if (temp > 20 && temp < 26) {  //dead;
+        else if (temp > 20 && temp < 24) {  //dead;
             ImageView image = findViewById(R.id.catimage);
             image.setImageResource(R.drawable.cat_freezing);
 
@@ -237,6 +245,20 @@ public class MainActivity extends AppCompatActivity {
                 Disconnect();
             }
         }
+
+        long time = Instant.now().toEpochMilli();
+        try {
+            File directory = getFilesDir();
+            File file = new File(directory, "timeValues_normal.txt");
+
+            FileWriter myWriter = new FileWriter(file, true);
+            myWriter.write(time + "\n");
+            myWriter.close();
+            Log.d("WRITING", "Successfully wrote to the file.");
+        } catch (IOException e) {
+            Log.d("WRITING", "An error occurred.");
+        }
+
     }
 
     private void Disconnect() {
