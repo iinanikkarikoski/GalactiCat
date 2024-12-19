@@ -21,6 +21,7 @@ public class StartScreen extends AppCompatActivity {
         navigation();
     }
 
+    //Navigating to mainActivity after pressing the button
     private void navigation () {
         Button b1 = findViewById(R.id.start_btn);
         b1.setOnClickListener(

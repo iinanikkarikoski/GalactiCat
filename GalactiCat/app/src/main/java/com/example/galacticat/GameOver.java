@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Objects;
 
-
 public class GameOver extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
@@ -19,11 +18,10 @@ public class GameOver extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).hide();
 
-        // Retrieve the time value passed from MainActivity
+        //Retrieve the time value passed from MainActivity
         long elapsedTime = getIntent().getLongExtra("elapsed_time", 0);
 
         TextView timeView = findViewById(R.id.time);
         timeView.setText("The cat was alive " + elapsedTime + " seconds");
     }
-
 }

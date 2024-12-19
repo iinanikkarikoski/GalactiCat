@@ -3,7 +3,7 @@
     <string name="connect">Connect</string>
     <string name="received_messages_will_appear_here">Received messages will appear here</string>
     <string name="catimage">CatImage</string>
-    <string name="Temperaturevalues" />
+    <string name="Temperaturevalues">Current temperature values are shown here</string>
     <string name="subscribed_values">Subscribed values</string>
     <string name="Sensor_values">Sensor values </string>
     <string name="morevalues">moreValues</string>
@@ -12,6 +12,7 @@
     <string name="GalactiCat">GalactiCat</string>
     <string name="GameOver">GAME OVER!</string>
     <string name="dead">The cat died :(\nIt was either too cold or too hot</string>
-    <string name="time" />
+    <string name="time">The cat was alive xx seconds</string>
     <string name="info">You need to keep the cat warm!\nThe optimal temperature\nfor the cat is 26°C</string>
+    <string name="Cat_info">Great! The cat is happy!</string>
 </resources>

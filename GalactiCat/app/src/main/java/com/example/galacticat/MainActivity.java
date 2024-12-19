@@ -28,10 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-
-//README: xml tiedosto res>layout>activity_main.xml
-// lol.kt on mainactivityn kotlin versio, ei tee mitää mutten uskaltanu poistaa sitä XD
-
 public class MainActivity extends AppCompatActivity {
 
     private Mqtt5AsyncClient client;
@@ -56,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         createFile();
     }
 
+    //Timer for measuring how long the cat was kept alive
     private void startTimer() {
         startTime = System.currentTimeMillis();
         isTimerRunning = true;
@@ -67,16 +64,17 @@ public class MainActivity extends AppCompatActivity {
                     long elapsedTime = System.currentTimeMillis() - startTime;
                     Log.d("TIMER", "Elapsed Time: " + elapsedTime / 1000 + " seconds");
 
-                    // Repeat every second
                     timerHandler.postDelayed(this, 1000);
                 }
             }
         };
 
-        // Start the timer immediately
         timerHandler.post(timerRunnable);
     }
 
+    //Creating text files for the data values and time values
+    //Time values were used in the evaluation
+    //Data values stores the gotten temperaturevalues from the sensor
     private void createFile() {
         try {
             File directory = getFilesDir();
@@ -100,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Navigation to the game over screen and resetting the counters for a new game
     private void navigation () {
         Intent i = new Intent(MainActivity.this, GameOver.class);
         i.putExtra("elapsed_time", time);
@@ -115,12 +114,12 @@ public class MainActivity extends AppCompatActivity {
         //Setting up the client
         client = MqttClient.builder()
                 .useMqttVersion5()
-                .serverHost("50257ce6934e4209a8fa688ee54347e8.s1.eu.hivemq.cloud")
+                .serverHost("xx")
                 .serverPort(8883)
                 .sslWithDefaultConfig()
                 .simpleAuth()
-                .username("kissa")
-                .password("Kissa222".getBytes())
+                .username("xx")
+                .password("xx".getBytes())
                 .applySimpleAuth().buildAsync();
 
         btn.setOnClickListener(v -> Connect());
@@ -141,8 +140,8 @@ public class MainActivity extends AppCompatActivity {
                 messageTextView.setText("Connected successfully");
                 Log.d("MQTT", "Connected successfully");
 
+                //If successfully connected, goes to subscribe the topic and starts the game timer
                 startTimer();
-                //If successfully connected, goes to subscribe the topic
                 Subscribe();
             }
 
@@ -161,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     private void Subscribe () {
 
         client.toAsync().subscribeWith()
-                .topicFilter("kissa/temp")
+                .topicFilter("id/temp")
                 .callback(publish -> {
                     Log.d("MQTT", "Received message: " + new String(publish.getPayloadAsBytes()));
 
@@ -174,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         messageTextView.setText("Current temperature: " + receivedMessage + " °C");
 
                         try {
+                            //Writing the gotten value to the text file with date and time stamp
                             @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String timestamp = formatter.format(new Date());
 
@@ -251,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        //For evaluation, getting the timestamp and writing it to the text file
         long time = Instant.now().toEpochMilli();
         try {
             File directory = getFilesDir();
@@ -266,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Disconnecting the MQTT when game was over
     private void Disconnect() {
         if (client != null) {
             client.disconnect()
@@ -282,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Stopping timer after game was over and navigating to the game over screen
     private void stopTimer() {
         isTimerRunning = false;
         timerHandler.removeCallbacks(timerRunnable);  // Stop the timer
